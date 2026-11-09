@@ -12,7 +12,7 @@ source:
     # conda-forge upstream https://github.com/conda-forge/pyvista-validation-feedstock/blob/main/recipe/recipe.yaml#L12C3-L13C71
     # Drop the optional C accelerator so the package stays noarch: without this the
     # extension is built wherever the image happens to carry a compiler.
-    - patches/0001-skip-optional-c-extension.patch
+    #- patches/0001-skip-optional-c-extension.patch
 
 build:
   number: 0
@@ -20,6 +20,9 @@ build:
   skip: true  # [py<310]
 
 requirements:
+  build:
+    - {{ stdlib('c') }}
+    - {{ compiler('c') }}
   host:
     - python
     - pip
