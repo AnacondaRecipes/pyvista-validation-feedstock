@@ -1,0 +1,65 @@
+{% set name = "pyvista-validation" %}
+{% set version = "0.2.2" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_') }}-{{ version }}.tar.gz
+  sha256: af234130a3b34b3e1af49584d75b41fafc694752b2958b36e9dbfd9f188e6a0c
+  patches:
+    - patches/0001-skip-optional-c-extension.patch
+
+build:
+  number: 0
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  skip: true  # [py<310]
+
+requirements:
+  host:
+    - python
+    - pip
+    # upstream build-system pins numpy>=2.0 for its 2.0 headers; 
+    # {{ numpy }} is the CBC ABI matrix pin and may resolve to 1.x.
+    - numpy >=2.0
+    - setuptools >=64
+    - setuptools-scm >=8
+  run:
+    - python
+    - numpy >=1.21.0
+    - typing_extensions >=4.4  # [py<313]
+
+test:
+  source_files:
+    - tests
+    - README.md
+  imports:
+    - pyvista_validation
+  commands:
+    - pip check
+    - pytest -vv tests
+  requires:
+    - pip
+    - pytest
+
+about:
+  home: https://github.com/pyvista/pyvista-validation
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: Validate and standardize array-like input.
+  description: |
+    These are the input validation functions developed for PyVista,
+    extracted into a standalone package so any project can use them.
+    NumPy is the only required dependency: PyVista is not needed, and VTK and SciPy are optional.
+  dev_url: https://github.com/pyvista/pyvista-validation
+  doc_url: https://validation.pyvista.org
+
+extra:
+  recipe-maintainers:
+    - avetr-work
+  skip-lints:
+    # upstream build-system pins numpy>=2.0 for its 2.0 headers; 
+    # {{ numpy }} is the CBC ABI matrix pin and may resolve to 1.x.
+    - host_section_needs_exact_pinnings
