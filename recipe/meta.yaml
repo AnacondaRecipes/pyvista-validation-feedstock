@@ -8,11 +8,6 @@ package:
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_') }}-{{ version }}.tar.gz
   sha256: af234130a3b34b3e1af49584d75b41fafc694752b2958b36e9dbfd9f188e6a0c
-  patches:
-    # conda-forge upstream https://github.com/conda-forge/pyvista-validation-feedstock/blob/main/recipe/recipe.yaml#L12C3-L13C71
-    # Drop the optional C accelerator so the package stays noarch: without this the
-    # extension is built wherever the image happens to carry a compiler.
-    #- patches/0001-skip-optional-c-extension.patch
 
 build:
   number: 0
